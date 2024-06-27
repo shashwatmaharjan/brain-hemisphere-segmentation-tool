@@ -36,6 +36,23 @@ def select_folder(initial_directory):
     return folder_selected
 
 
+# Function to load an image on the canvas
+def load_image(canvas, image_path):
+
+    # Load the image
+    image = Image.open(image_path)
+    image = image.resize((int(image.width/2.5), int(image.height/2.5)))
+    photo = ImageTk.PhotoImage(image)
+
+    # Display the image on the canvas
+    canvas.image = photo
+
+    # Keep a reference to the image
+    # This prevents the image from being garbage collected meaning if might not be displayed 
+    # and ensures that there is reference to the image as long as the canvas is displayed
+    canvas.create_image(0, 0, anchor=tk.NW, image=photo)
+                         
+
 # Function to define when a button is pressed
 def on_button_press(event):
 
@@ -74,10 +91,48 @@ def undo_last_annotation(canvas):
         canvas.delete(line_id)
 
 
+# Function to go to previous image
+def previous_image(canvas, files_in_folder, selected_folder):
+
+    global current_image_index
+
+    if current_image_index > 0:
+
+        current_image_index = current_image_index - 1
+    
+        # Load the previous image
+        path_to_image = os.path.join(selected_folder, files_in_folder[current_image_index])
+
+        # Load the new image
+        load_image(canvas, path_to_image)
+
+        # Update the title
+        root.title(f'Annotate {files_in_folder[current_image_index]}')
+
+
+# Function to go to next image
+def next_image(canvas, files_in_folder, selected_folder):
+
+    global current_image_index
+
+    if current_image_index < len(files_in_folder) - 1:
+    
+        current_image_index = current_image_index + 1
+
+        # Load the next image
+        path_to_image = os.path.join(selected_folder, files_in_folder[current_image_index])
+
+        # Load the new image
+        load_image(canvas, path_to_image)
+
+        # Update the title
+        root.title(f'Annotate {files_in_folder[current_image_index]}')
+
+
 # Main function
 def main():
 
-    global start_x, start_y, lines, marker_width
+    global start_x, start_y, lines, marker_width, current_image_index, root
 
     # Define the marker width
     marker_width = 4
@@ -103,34 +158,27 @@ def main():
     files_in_folder = os.listdir(selected_folder)
     files_in_folder.sort()
 
+    # Initialize current image index
+    current_image_index = 0
+
     # Select the first image
-    image_selected = files_in_folder[0]
-    path_to_image = os.path.join(selected_folder, image_selected)
+    path_to_image = os.path.join(selected_folder, files_in_folder[current_image_index])
 
     # Create a main window
     root = tk.Tk()
-    root.title(f'Annotate {image_selected}')
+    root.title(f'Annotate {files_in_folder[current_image_index]}')
 
     # Make the window non-resizable
     root.resizable(False, False)
 
-    # Load the image
-    image = Image.open(path_to_image)
-    image = image.resize((int(image.width/2.5), int(image.height/2.5)))
-    photo = ImageTk.PhotoImage(image)
-
     # Create a canvas to display the image and annotate
     # Make the canvas full-screen
-    canvas = tk.Canvas(root, cursor='arrow', width=image.width, height=image.height)
+    # 666 and 832 is based on the size of the .tif image
+    canvas = tk.Canvas(root, cursor='arrow', width=666, height=832)
     canvas.pack(fill=tk.BOTH, expand=tk.YES)
 
-    # Display the image on the canvas
-    canvas.create_image(0, 0, anchor=tk.NW, image=photo)
-
-    # Keep a reference to the image
-    # This prevents the image from being garbage collected meaning if might not be displayed 
-    # and ensures that there is reference to the image as long as the canvas is displayed
-    canvas.image = photo
+    # Load the first image
+    load_image(canvas, path_to_image)
     
     # Bind mouse events to the canvas
     canvas.bind('<ButtonPress-1>', lambda event: on_button_press(event))
@@ -138,7 +186,15 @@ def main():
 
     # Create an Undo button
     undo_button = tk.Button(root, text='Undo', command=lambda: undo_last_annotation(canvas))
-    undo_button.pack(side=tk.BOTTOM)
+    undo_button.pack(side=tk.BOTTOM, anchor=tk.S)
+
+    # Create previous button
+    previous_button = tk.Button(root, text='Previous', command=lambda: previous_image(canvas, files_in_folder, selected_folder))
+    previous_button.pack(side=tk.LEFT, anchor=tk.SW)
+
+    # Create next button
+    next_button = tk.Button(root, text='Next', command=lambda: next_image(canvas, files_in_folder, selected_folder))
+    next_button.pack(side=tk.RIGHT, anchor=tk.SE)
 
     # Run the main loop
     root.mainloop()
