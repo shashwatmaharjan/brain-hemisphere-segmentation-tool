@@ -48,7 +48,7 @@ def on_button_press(event):
 # Function to define when a button is released
 def on_button_release(event, canvas):
     
-    global start_x, start_y
+    global start_x, start_y, lines
 
     end_x = event.x
     end_y = event.y
@@ -56,17 +56,35 @@ def on_button_release(event, canvas):
     if start_x is not None and start_y is not None:
 
         # Draw a line on the canvas
-        canvas.create_line(start_x, start_y, end_x, end_y, fill='white', width=2)
+        line_id = canvas.create_line(start_x, start_y, end_x, end_y, fill='white', width=marker_width)
+        lines.append(line_id)
 
         # Update the start position
         start_x = None
         start_y = None
 
 
+# Function to undo the last annotation
+def undo_last_annotation(canvas):
+
+    global lines
+
+    if lines:
+
+        last_line = lines.pop()
+        canvas.delete(last_line)
+
+
 # Main function
 def main():
 
-    global start_x, start_y
+    global start_x, start_y, lines, marker_width
+
+    # Define the marker width
+    marker_width = 4
+
+    # Initialize lines as a list to store the lines drawn
+    lines = []
 
     # Define directories
     current_directory = os.getcwd()
@@ -74,7 +92,6 @@ def main():
 
     # Start a pop-up window to select a folder
     selected_folder = select_folder(initial_directory=data_directory)
-    # selected_folder = '/Users/mahar1s/Documents/github/drawing-white-lines/data/1550'
     
     # If a folder is not selected, exit the program
     if not selected_folder:
@@ -119,6 +136,10 @@ def main():
     # Bind mouse events to the canvas
     canvas.bind('<ButtonPress-1>', lambda event: on_button_press(event))
     canvas.bind('<ButtonRelease-1>', lambda event: on_button_release(event, canvas))
+
+    # Add an undo button
+    undo_button = tk.Button(root, text='Undo', command=lambda: undo_last_annotation(canvas))
+    undo_button.pack(side=tk.BOTTOM)
 
     # Run the main loop
     root.mainloop()
