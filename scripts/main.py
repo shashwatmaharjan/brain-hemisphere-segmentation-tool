@@ -40,7 +40,7 @@ def select_folder(initial_directory):
 def on_button_press(event):
 
     global start_x, start_y
-    
+
     start_x = event.x
     start_y = event.y
 
@@ -105,7 +105,7 @@ def main():
 
     # Create a canvas to display the image and annotate
     # Make the canvas full-screen
-    canvas = tk.Canvas(root, cursor='pencil', width=image.width, height=image.height)
+    canvas = tk.Canvas(root, cursor='arrow', width=image.width, height=image.height)
     canvas.pack(fill=tk.BOTH, expand=tk.YES)
 
     # Display the image on the canvas
