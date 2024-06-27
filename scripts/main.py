@@ -66,7 +66,8 @@ def on_button_release(event, canvas):
 
 # Function to undo the last annotation
 def undo_last_annotation(canvas):
-
+    
+    # If lines is not empty, pop the last line and delete it from the canvas
     if lines:
 
         line_id = lines.pop()
