@@ -2,6 +2,7 @@
 import os
 import platform
 import tkinter as tk
+import imghdr
 
 from tkinter import filedialog
 from PIL import Image, ImageTk, ImageDraw
@@ -92,7 +93,7 @@ def undo_last_annotation(canvas):
 
 
 # Function to go to previous image
-def previous_image(canvas, files_in_folder, selected_folder):
+def previous_image(canvas, image_files_in_folder, selected_folder):
 
     global current_image_index
 
@@ -101,32 +102,32 @@ def previous_image(canvas, files_in_folder, selected_folder):
         current_image_index = current_image_index - 1
     
         # Load the previous image
-        path_to_image = os.path.join(selected_folder, files_in_folder[current_image_index])
+        path_to_image = os.path.join(selected_folder, image_files_in_folder[current_image_index])
 
         # Load the new image
         load_image(canvas, path_to_image)
 
         # Update the title
-        root.title(f'Annotate {files_in_folder[current_image_index]}')
+        root.title(f'Annotate {image_files_in_folder[current_image_index]}')
 
 
 # Function to go to next image
-def next_image(canvas, files_in_folder, selected_folder):
+def next_image(canvas, image_files_in_folder, selected_folder):
 
     global current_image_index
 
-    if current_image_index < len(files_in_folder) - 1:
+    if current_image_index < len(image_files_in_folder) - 1:
     
         current_image_index = current_image_index + 1
 
         # Load the next image
-        path_to_image = os.path.join(selected_folder, files_in_folder[current_image_index])
+        path_to_image = os.path.join(selected_folder, image_files_in_folder[current_image_index])
 
         # Load the new image
         load_image(canvas, path_to_image)
 
         # Update the title
-        root.title(f'Annotate {files_in_folder[current_image_index]}')
+        root.title(f'Annotate {image_files_in_folder[current_image_index]}')
 
 
 # Main function
@@ -154,19 +155,28 @@ def main():
 
         return
 
-    # List all files in the selected folder
+    # List all files in the selected folder and filter out only image files
     files_in_folder = os.listdir(selected_folder)
     files_in_folder.sort()
+
+    # Initialize an empty list to store image files
+    image_files_in_folder = []
+    
+    for file in files_in_folder:
+
+        if imghdr.what(os.path.join(selected_folder, file)):
+                       
+            image_files_in_folder.append(file)
 
     # Initialize current image index
     current_image_index = 0
 
     # Select the first image
-    path_to_image = os.path.join(selected_folder, files_in_folder[current_image_index])
+    path_to_image = os.path.join(selected_folder, image_files_in_folder[current_image_index])
 
     # Create a main window
     root = tk.Tk()
-    root.title(f'Annotate {files_in_folder[current_image_index]}')
+    root.title(f'Annotate {image_files_in_folder[current_image_index]}')
 
     # Make the window non-resizable
     root.resizable(False, False)
@@ -189,11 +199,11 @@ def main():
     undo_button.pack(side=tk.BOTTOM, anchor=tk.S)
 
     # Create previous button
-    previous_button = tk.Button(root, text='Previous', command=lambda: previous_image(canvas, files_in_folder, selected_folder))
+    previous_button = tk.Button(root, text='Previous', command=lambda: previous_image(canvas, image_files_in_folder, selected_folder))
     previous_button.pack(side=tk.LEFT, anchor=tk.SW)
 
     # Create next button
-    next_button = tk.Button(root, text='Next', command=lambda: next_image(canvas, files_in_folder, selected_folder))
+    next_button = tk.Button(root, text='Next', command=lambda: next_image(canvas, image_files_in_folder, selected_folder))
     next_button.pack(side=tk.RIGHT, anchor=tk.SE)
 
     # Run the main loop
