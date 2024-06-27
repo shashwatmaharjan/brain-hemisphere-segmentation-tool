@@ -66,6 +66,9 @@ def main():
     root = tk.Tk()
     root.title(f'Annotate {image_selected}')
 
+    # Make the window non-resizable
+    root.resizable(False, False)
+
     # Load the image
     image = Image.open(path_to_image)
     image = image.resize((int(image.width/2.5), int(image.height/2.5)))
