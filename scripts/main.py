@@ -36,8 +36,37 @@ def select_folder(initial_directory):
     return folder_selected
 
 
+# Function to define when a button is pressed
+def on_button_press(event):
+
+    global start_x, start_y
+    
+    start_x = event.x
+    start_y = event.y
+
+
+# Function to define when a button is released
+def on_button_release(event, canvas):
+    
+    global start_x, start_y
+
+    end_x = event.x
+    end_y = event.y
+
+    if start_x is not None and start_y is not None:
+
+        # Draw a line on the canvas
+        canvas.create_line(start_x, start_y, end_x, end_y, fill='white', width=2)
+
+        # Update the start position
+        start_x = None
+        start_y = None
+
+
 # Main function
 def main():
+
+    global start_x, start_y
 
     # Define directories
     current_directory = os.getcwd()
@@ -86,6 +115,10 @@ def main():
     # This prevents the image from being garbage collected meaning if might not be displayed 
     # and ensures that there is reference to the image as long as the canvas is displayed
     canvas.image = photo
+    
+    # Bind mouse events to the canvas
+    canvas.bind('<ButtonPress-1>', lambda event: on_button_press(event))
+    canvas.bind('<ButtonRelease-1>', lambda event: on_button_release(event, canvas))
 
     # Run the main loop
     root.mainloop()
