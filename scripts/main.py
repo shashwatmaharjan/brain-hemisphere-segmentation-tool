@@ -194,17 +194,25 @@ def main():
     canvas.bind('<ButtonPress-1>', lambda event: on_button_press(event))
     canvas.bind('<ButtonRelease-1>', lambda event: on_button_release(event, canvas))
 
-    # Create an Undo button
-    undo_button = tk.Button(root, text='Undo', command=lambda: undo_last_annotation(canvas))
-    undo_button.pack(side=tk.BOTTOM, anchor=tk.S)
+    # Create a frame to hold the buttons
+    button_frame = tk.Frame(root)
+    button_frame.pack(side=tk.BOTTOM, fill=tk.X)
 
-    # Create previous button
-    previous_button = tk.Button(root, text='Previous', command=lambda: previous_image(canvas, image_files_in_folder, selected_folder))
-    previous_button.pack(side=tk.LEFT, anchor=tk.SW)
+    # Create a sub-frame to center the buttons
+    center_frame = tk.Frame(button_frame)
+    center_frame.pack(side=tk.BOTTOM)
 
-    # Create next button
-    next_button = tk.Button(root, text='Next', command=lambda: next_image(canvas, image_files_in_folder, selected_folder))
-    next_button.pack(side=tk.RIGHT, anchor=tk.SE)
+    # Create Previous button
+    previous_button = tk.Button(center_frame, text='Previous', command=lambda: previous_image(canvas, image_files_in_folder, selected_folder))
+    previous_button.pack(side=tk.LEFT, padx=5, pady=5)
+
+    # Create Undo button
+    undo_button = tk.Button(center_frame, text='Undo', command=lambda: undo_last_annotation(canvas))
+    undo_button.pack(side=tk.LEFT, padx=5, pady=5)
+
+    # Create Next button
+    next_button = tk.Button(center_frame, text='Next', command=lambda: next_image(canvas, image_files_in_folder, selected_folder))
+    next_button.pack(side=tk.LEFT, padx=5, pady=5)
 
     # Run the main loop
     root.mainloop()
