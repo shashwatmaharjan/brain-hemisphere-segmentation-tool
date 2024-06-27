@@ -64,7 +64,7 @@ def main():
 
     # Create a main window
     root = tk.Tk()
-    root.title('Annotate the Image')
+    root.title(f'Annotate {image_selected}')
 
     # Load the image
     image = Image.open(path_to_image)
