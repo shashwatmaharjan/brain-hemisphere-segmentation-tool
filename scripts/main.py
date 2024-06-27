@@ -64,17 +64,6 @@ def on_button_release(event, canvas):
         start_y = None
 
 
-# Function to undo the last annotation
-def undo_last_annotation(canvas):
-
-    global lines
-
-    if lines:
-
-        last_line = lines.pop()
-        canvas.delete(last_line)
-
-
 # Main function
 def main():
 
@@ -136,10 +125,6 @@ def main():
     # Bind mouse events to the canvas
     canvas.bind('<ButtonPress-1>', lambda event: on_button_press(event))
     canvas.bind('<ButtonRelease-1>', lambda event: on_button_release(event, canvas))
-
-    # Add an undo button
-    undo_button = tk.Button(root, text='Undo', command=lambda: undo_last_annotation(canvas))
-    undo_button.pack(side=tk.BOTTOM)
 
     # Run the main loop
     root.mainloop()
