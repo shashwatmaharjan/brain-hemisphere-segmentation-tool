@@ -340,23 +340,23 @@ def main():
                                 command=lambda: previous_image(canvas, image_files_in_folder, selected_folder, annotated_data_directory, sample_number))
     previous_button.pack(side=tk.LEFT, padx=5, pady=5)
 
-    # Create Undo button
-    undo_button = tk.Button(center_frame, text='Undo', command=lambda: undo_last_annotation(canvas))
-    undo_button.pack(side=tk.LEFT, padx=5, pady=5)
-
     # Create Next button
     next_button = tk.Button(center_frame, text='Next', 
                             command=lambda: next_image(canvas, image_files_in_folder, selected_folder, annotated_data_directory, sample_number))
     next_button.pack(side=tk.LEFT, padx=5, pady=5)
 
+    # Create a button to toggle between drawing modes
+    draw_mode_button = tk.Button(center_frame, text='Mode: Straight Line', command=lambda: toggle_drawing_mode(canvas))
+    draw_mode_button.pack(side=tk.LEFT, padx=5, pady=5)
+
+    # Create Undo button
+    undo_button = tk.Button(center_frame, text='Undo', command=lambda: undo_last_annotation(canvas))
+    undo_button.pack(side=tk.LEFT, padx=5, pady=5)
+
     # Create Save button
     save_button = tk.Button(center_frame, text='Save', 
                             command=lambda: save_annotated_image(canvas, os.path.join(annotated_data_directory, sample_number, image_files_in_folder[current_image_index].split('.')[0])))
     save_button.pack(side=tk.LEFT, padx=5, pady=5)
-
-    # Create a button to toggle between drawing modes
-    draw_mode_button = tk.Button(center_frame, text='Mode: Straight Line', command=lambda: toggle_drawing_mode(canvas))
-    draw_mode_button.pack(side=tk.LEFT, padx=5, pady=5)
 
     # Run the main loop
     root.mainloop()
