@@ -159,10 +159,10 @@ def main():
 
     # Define directories
     current_directory = os.getcwd()
-    data_directory = os.path.join(current_directory, 'data')
+    unannotated_data_directory = os.path.join(current_directory, 'data', 'unannotated')
 
     # Start a pop-up window to select a folder
-    selected_folder = select_folder(initial_directory=data_directory)
+    selected_folder = select_folder(initial_directory=unannotated_data_directory)
     
     # If a folder is not selected, exit the program
     if not selected_folder:
