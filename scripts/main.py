@@ -346,36 +346,41 @@ def main():
     button_frame = tk.Frame(root)
     button_frame.pack(side=tk.BOTTOM, fill=tk.X)
 
-    # Create a sub-frame to center the buttons
-    center_frame = tk.Frame(button_frame)
-    center_frame.pack(side=tk.BOTTOM)
+    # Create a sub-frame to hold left side buttons
+    left_frame = tk.Frame(button_frame)
+    left_frame.pack(side=tk.LEFT)
 
     # Create Previous button
-    previous_button = tk.Button(center_frame, text='Previous', 
-                                command=lambda: previous_image(canvas, image_files_in_folder, selected_folder, annotated_data_directory, sample_number))
+    previous_button = tk.Button(left_frame, text='Previous', command=lambda: previous_image(canvas, image_files_in_folder, selected_folder, annotated_data_directory, sample_number))
     previous_button.pack(side=tk.LEFT, padx=5, pady=5)
 
+    # Create Save button
+    save_button = tk.Button(left_frame, text='Save', command=lambda: save_annotated_image(canvas, os.path.join(annotated_data_directory, sample_number, image_files_in_folder[current_image_index].split('.')[0])))
+    save_button.pack(side=tk.LEFT, padx=5, pady=5)
+
     # Create Next button
-    next_button = tk.Button(center_frame, text='Next', 
-                            command=lambda: next_image(canvas, image_files_in_folder, selected_folder, annotated_data_directory, sample_number))
+    next_button = tk.Button(left_frame, text='Next', command=lambda: next_image(canvas, image_files_in_folder, selected_folder, annotated_data_directory, sample_number))
     next_button.pack(side=tk.LEFT, padx=5, pady=5)
+
+    # Create a frame to hold the mode button
+    center_frame = tk.Frame(button_frame)
+    center_frame.pack(side=tk.LEFT, padx=50)
 
     # Create a button to toggle between drawing modes
     draw_mode_button = tk.Button(center_frame, text='Mode: Straight Line', command=lambda: toggle_drawing_mode(canvas))
-    draw_mode_button.pack(side=tk.LEFT, padx=5, pady=5)
+    draw_mode_button.pack(padx=5, pady=5)
+
+    # Create a frame to hold right side buttons
+    right_frame = tk.Frame(button_frame)
+    right_frame.pack(side=tk.RIGHT)
 
     # Create Undo button
-    undo_button = tk.Button(center_frame, text='Undo', command=lambda: undo_last_annotation(canvas))
+    undo_button = tk.Button(right_frame, text='Undo', command=lambda: undo_last_annotation(canvas))
     undo_button.pack(side=tk.LEFT, padx=5, pady=5)
 
-    # Create Clear button
-    clear_button = tk.Button(center_frame, text='Clear All', command=lambda: clear_all_annotations(canvas))
-    clear_button.pack(side=tk.LEFT, padx=5, pady=5)
-
-    # Create Save button
-    save_button = tk.Button(center_frame, text='Save', 
-                            command=lambda: save_annotated_image(canvas, os.path.join(annotated_data_directory, sample_number, image_files_in_folder[current_image_index].split('.')[0])))
-    save_button.pack(side=tk.LEFT, padx=5, pady=5)
+    # Create Clear All button
+    clear_all_button = tk.Button(right_frame, text='Clear All', command=lambda: clear_all_annotations(canvas))
+    clear_all_button.pack(side=tk.LEFT, padx=5, pady=5)
 
     # Run the main loop
     root.mainloop()
