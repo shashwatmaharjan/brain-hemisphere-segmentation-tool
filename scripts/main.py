@@ -13,9 +13,11 @@ def clear_screen():
     
     # Clear screen
     if platform.system() == 'Windows':
+
         os.system('cls')
 
     else:
+        
         os.system('clear')
 
 
