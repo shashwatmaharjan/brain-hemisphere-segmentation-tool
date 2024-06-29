@@ -184,10 +184,6 @@ def previous_image(canvas, image_files_in_folder, selected_folder, annotated_dat
 
     global current_image_index
 
-    # You do not necessarily have to explicitly use the save button to save the image
-    # You can save the image when you move to the previous image
-    save_annotated_image(canvas, os.path.join(annotated_data_directory, sample_number, image_files_in_folder[current_image_index].split('.')[0]))
-
     if current_image_index > 0:
 
         current_image_index = current_image_index - 1
@@ -206,10 +202,6 @@ def previous_image(canvas, image_files_in_folder, selected_folder, annotated_dat
 def next_image(canvas, image_files_in_folder, selected_folder, annotated_data_directory, sample_number):
 
     global current_image_index
-
-    # You do not necessarily have to explicitly use the save button to save the image
-    # You can save the image when you move to the next image
-    save_annotated_image(canvas, os.path.join(annotated_data_directory, sample_number, image_files_in_folder[current_image_index].split('.')[0]))
 
     if current_image_index < len(image_files_in_folder) - 1:
     
