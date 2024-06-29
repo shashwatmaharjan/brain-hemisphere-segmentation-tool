@@ -160,6 +160,12 @@ def main():
     # Define directories
     current_directory = os.getcwd()
     unannotated_data_directory = os.path.join(current_directory, 'data', 'unannotated')
+    annotated_data_directory = os.path.join(current_directory, 'data', 'annotated')
+    
+    # If annotated data directory does not exist, create it
+    if not os.path.exists(annotated_data_directory):
+
+        os.makedirs(annotated_data_directory)
 
     # Start a pop-up window to select a folder
     selected_folder = select_folder(initial_directory=unannotated_data_directory)
