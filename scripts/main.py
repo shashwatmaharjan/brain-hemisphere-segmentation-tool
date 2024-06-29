@@ -198,6 +198,14 @@ def main():
     
         return
     
+    # Get the folder name or sample number
+    sample_number = os.path.basename(selected_folder)
+
+    # Create a folder in the annotated data directory with the sample number if it does not exist
+    if not os.path.exists(os.path.join(annotated_data_directory, sample_number)):
+
+        os.makedirs(os.path.join(annotated_data_directory, sample_number))
+    
     # Initialize current image index
     current_image_index = 0
 
