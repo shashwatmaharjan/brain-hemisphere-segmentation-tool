@@ -2,9 +2,10 @@
 import os
 import platform
 import tkinter as tk
+import io
 
 from tkinter import filedialog
-from PIL import Image, ImageTk
+from PIL import Image, ImageTk, ImageGrab
 
 # Define necessary functions
 # Function to clear screen
@@ -146,6 +147,24 @@ def next_image(canvas, image_files_in_folder, selected_folder):
         root.title(f'Annotate {image_files_in_folder[current_image_index]}')
 
 
+# Function to save the current annotated image
+def save_annotated_image(canvas, output_path):
+
+    # Tried the .ps format but it required additional ghostscript installation
+    # Get the canvas coordinates
+    x0 = root.winfo_rootx()
+    y0 = root.winfo_rooty()
+
+    width = canvas.winfo_width()
+    height = canvas.winfo_height()
+
+    # Grab the canvas content as an image
+    image = ImageGrab.grab((x0, y0, x0 + width, y0 + height))
+
+    # Save the image
+    image.save(f'{output_path}.tif', 'TIFF')
+
+
 # Main function
 def main():
 
@@ -251,6 +270,11 @@ def main():
     # Create Next button
     next_button = tk.Button(center_frame, text='Next', command=lambda: next_image(canvas, image_files_in_folder, selected_folder))
     next_button.pack(side=tk.LEFT, padx=5, pady=5)
+
+    # Create Save button
+    save_button = tk.Button(center_frame, text='Save', 
+                            command=lambda: save_annotated_image(canvas, os.path.join(annotated_data_directory, sample_number, image_files_in_folder[current_image_index].split('.')[0])))
+    save_button.pack(side=tk.LEFT, padx=5, pady=5)
 
     # Run the main loop
     root.mainloop()
