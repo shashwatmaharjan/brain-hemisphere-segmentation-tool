@@ -2,7 +2,6 @@
 import os
 import platform
 import tkinter as tk
-import io
 
 from tkinter import filedialog
 from PIL import Image, ImageTk, ImageGrab
@@ -69,7 +68,7 @@ def load_image(canvas, image_path):
     # This prevents the image from being garbage collected meaning if might not be displayed 
     # and ensures that there is reference to the image as long as the canvas is displayed
     canvas.create_image(0, 0, anchor=tk.NW, image=photo)
-                         
+
 
 # Function to define when a button is pressed
 def on_button_press(event):
@@ -83,20 +82,76 @@ def on_button_press(event):
 # Function to define when a button is released
 def on_button_release(event, canvas):
     
-    global start_x, start_y, lines
+    global start_x, start_y
 
     end_x = event.x
     end_y = event.y
 
+    if drawing_mode == 'straight':
+    
+        draw_straight_line(end_x, end_y, canvas)
+    
+    # Update the start position
+    start_x = None
+    start_y = None
+
+
+# Function to draw a straight line
+def draw_straight_line(end_x, end_y, canvas):
+
+    global start_x, start_y
+
     if start_x is not None and start_y is not None:
 
-        # Draw a line on the canvas
-        line_id = canvas.create_line(start_x, start_y, end_x, end_y, fill='white', width=marker_width)
+        line_id = canvas.create_line(start_x, start_y, end_x, end_y, fill='white', 
+                                     width=straight_line_marker_width)
         lines.append(line_id)
 
         # Update the start position
         start_x = None
         start_y = None
+
+
+# Function to draw a freehand line
+def draw_freehand_line(event, canvas):
+
+    global start_x, start_y
+
+    if start_x is not None and start_y is not None:
+
+        end_x, end_y = event.x, event.y
+        
+        # Smooth the line by capturing intermediate points
+        line_id = canvas.create_line(start_x, start_y, end_x, end_y, fill='white',
+                                     width=freehand_line_marker_width, smooth=tk.TRUE, splinesteps=36)
+        lines.append(line_id)
+        
+        # Update the start position
+        start_x = end_x
+        start_y = end_y
+
+
+# Function to switch between straight and freehand drawing modes
+def toggle_drawing_mode(canvas):
+
+    global drawing_mode
+    
+    # The logic is confusing because we want to switch between the two modes
+    # Trust me it works
+    if drawing_mode == 'straight':
+
+        canvas.bind('<B1-Motion>', lambda event: draw_freehand_line(event, canvas))
+        drawing_mode = 'freehand'
+        draw_mode_button.config(text='Mode: Freehand')
+    
+    else:
+
+        # Unbind any existing motion binding before binding a new one
+        canvas.bind('<B1-Motion>', lambda event: None)
+        canvas.bind('<ButtonPress-1>', lambda event: on_button_press(event))
+        canvas.bind('<ButtonRelease-1>', lambda event: on_button_release(event, canvas))
+        drawing_mode = 'straight'
+        draw_mode_button.config(text='Mode: Straight Line')
 
 
 # Function to undo the last annotation
@@ -176,10 +231,20 @@ def save_annotated_image(canvas, output_path):
 # Main function
 def main():
 
-    global start_x, start_y, lines, marker_width, current_image_index, root
+    global start_x, start_y
+    global lines
+    global straight_line_marker_width, freehand_line_marker_width
+    global drawing_mode
+    global current_image_index
+    global draw_mode_button
+    global root
+
+    # Initialize a default drawing mode
+    drawing_mode = 'straight'
 
     # Define the marker width
-    marker_width = 4
+    straight_line_marker_width = 4
+    freehand_line_marker_width = 6
 
     # Initialize lines as a list to store the lines drawn
     lines = []
@@ -259,6 +324,9 @@ def main():
     canvas.bind('<ButtonPress-1>', lambda event: on_button_press(event))
     canvas.bind('<ButtonRelease-1>', lambda event: on_button_release(event, canvas))
 
+    # Default to straight line drawing
+    canvas.bind('<B1-Motion>', lambda event: None)
+
     # Create a frame to hold the buttons
     button_frame = tk.Frame(root)
     button_frame.pack(side=tk.BOTTOM, fill=tk.X)
@@ -285,6 +353,10 @@ def main():
     save_button = tk.Button(center_frame, text='Save', 
                             command=lambda: save_annotated_image(canvas, os.path.join(annotated_data_directory, sample_number, image_files_in_folder[current_image_index].split('.')[0])))
     save_button.pack(side=tk.LEFT, padx=5, pady=5)
+
+    # Create a button to toggle between drawing modes
+    draw_mode_button = tk.Button(center_frame, text='Mode: Straight Line', command=lambda: toggle_drawing_mode(canvas))
+    draw_mode_button.pack(side=tk.LEFT, padx=5, pady=5)
 
     # Run the main loop
     root.mainloop()
