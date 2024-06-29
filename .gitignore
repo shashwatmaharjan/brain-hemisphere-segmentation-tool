@@ -1,9 +1,6 @@
 # macOS
 .DS_Store
 
-# Extensions
-*.tif
-
 # Particular File
 create_yml_file.py
 environment.yml
