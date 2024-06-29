@@ -1,0 +1,7 @@
+name: annotation_env
+channels:
+  - defaults
+dependencies:
+  - platform=1.08
+  - PIL=10.3.0
+  - tkinter=8.6
