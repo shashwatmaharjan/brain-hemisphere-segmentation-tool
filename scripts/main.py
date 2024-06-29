@@ -110,9 +110,13 @@ def undo_last_annotation(canvas):
 
 
 # Function to go to previous image
-def previous_image(canvas, image_files_in_folder, selected_folder):
+def previous_image(canvas, image_files_in_folder, selected_folder, annotated_data_directory, sample_number):
 
     global current_image_index
+
+    # You do not necessarily have to explicitly use the save button to save the image
+    # You can save the image when you move to the previous image
+    save_annotated_image(canvas, os.path.join(annotated_data_directory, sample_number, image_files_in_folder[current_image_index].split('.')[0]))
 
     if current_image_index > 0:
 
@@ -129,9 +133,13 @@ def previous_image(canvas, image_files_in_folder, selected_folder):
 
 
 # Function to go to next image
-def next_image(canvas, image_files_in_folder, selected_folder):
+def next_image(canvas, image_files_in_folder, selected_folder, annotated_data_directory, sample_number):
 
     global current_image_index
+
+    # You do not necessarily have to explicitly use the save button to save the image
+    # You can save the image when you move to the next image
+    save_annotated_image(canvas, os.path.join(annotated_data_directory, sample_number, image_files_in_folder[current_image_index].split('.')[0]))
 
     if current_image_index < len(image_files_in_folder) - 1:
     
@@ -260,7 +268,8 @@ def main():
     center_frame.pack(side=tk.BOTTOM)
 
     # Create Previous button
-    previous_button = tk.Button(center_frame, text='Previous', command=lambda: previous_image(canvas, image_files_in_folder, selected_folder))
+    previous_button = tk.Button(center_frame, text='Previous', 
+                                command=lambda: previous_image(canvas, image_files_in_folder, selected_folder, annotated_data_directory, sample_number))
     previous_button.pack(side=tk.LEFT, padx=5, pady=5)
 
     # Create Undo button
@@ -268,7 +277,8 @@ def main():
     undo_button.pack(side=tk.LEFT, padx=5, pady=5)
 
     # Create Next button
-    next_button = tk.Button(center_frame, text='Next', command=lambda: next_image(canvas, image_files_in_folder, selected_folder))
+    next_button = tk.Button(center_frame, text='Next', 
+                            command=lambda: next_image(canvas, image_files_in_folder, selected_folder, annotated_data_directory, sample_number))
     next_button.pack(side=tk.LEFT, padx=5, pady=5)
 
     # Create Save button
