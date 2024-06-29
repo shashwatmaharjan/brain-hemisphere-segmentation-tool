@@ -159,9 +159,24 @@ def undo_last_annotation(canvas):
     
     # If lines is not empty, pop the last line and delete it from the canvas
     if lines:
-
+        
+        # Delete the last line
         line_id = lines.pop()
+
+        # Delete the line from the canvas
         canvas.delete(line_id)
+
+
+# Function to clear all annotations
+def clear_all_annotations(canvas):
+    
+    # Delete all lines from the canvas
+    for line_id in lines:
+
+        canvas.delete(line_id)
+    
+    # Clear the lines list
+    lines.clear()
 
 
 # Function to go to previous image
@@ -352,6 +367,10 @@ def main():
     # Create Undo button
     undo_button = tk.Button(center_frame, text='Undo', command=lambda: undo_last_annotation(canvas))
     undo_button.pack(side=tk.LEFT, padx=5, pady=5)
+
+    # Create Clear button
+    clear_button = tk.Button(center_frame, text='Clear All', command=lambda: clear_all_annotations(canvas))
+    clear_button.pack(side=tk.LEFT, padx=5, pady=5)
 
     # Create Save button
     save_button = tk.Button(center_frame, text='Save', 
