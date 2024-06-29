@@ -2,10 +2,9 @@
 import os
 import platform
 import tkinter as tk
-import imghdr
 
 from tkinter import filedialog
-from PIL import Image, ImageTk, ImageDraw
+from PIL import Image, ImageTk
 
 # Define necessary functions
 # Function to clear screen
@@ -38,6 +37,21 @@ def select_folder(initial_directory):
 
     return folder_selected
 
+
+# Function to check if a file is an image
+def is_image(file_path):
+
+    try:
+
+        # Verify that it is, in fact, an image
+        img = Image.open(file_path)
+        img.verify()  # Verify that it is, in fact, an image
+        return True
+    
+    except (IOError, SyntaxError):
+
+        return False
+    
 
 # Function to load an image on the canvas
 def load_image(canvas, image_path):
@@ -164,12 +178,20 @@ def main():
     # Initialize an empty list to store image files
     image_files_in_folder = []
     
+    # Check if the file is an image
     for file in files_in_folder:
 
-        if imghdr.what(os.path.join(selected_folder, file)):
+        if is_image(os.path.join(selected_folder, file)):
                        
             image_files_in_folder.append(file)
+    
+    # If there are no image files in the selected folder, exit the program
+    if not image_files_in_folder:
 
+        print('No image files in the selected folder. Exiting the program...')
+    
+        return
+    
     # Initialize current image index
     current_image_index = 0
 
