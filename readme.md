@@ -1,6 +1,8 @@
-# Project Name
+# Brain Hemisphere Segmentation Tool
 
-A brief description of the project goes here.
+## Features
+- **Straight Line Segmentation:** Easily divide the brain into left and right hemispheres for precise stroke area calculation.
+- **Freehand Line Tool:** Manually correct artifacts by drawing freehand lines to separate merged cell slices.
 
 ## Table of Contents
 
