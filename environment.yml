@@ -2,7 +2,7 @@ name: brain_hemisphere_segmentation_tool_env
 channels:
   - defaults
 dependencies:
-  - platform
-  - PIL
-  - tkinter
-  - os
+  - python=3.11.9
+  - platform=1.0.8
+  - PIL=10.3.0
+  - tkinter=8.6
