@@ -17,7 +17,7 @@ This Python script provides a graphical user interface (GUI) to segment the left
 1. Clone the repository:
 ```bash
    git clone https://github.com/shashwatmaharjan/brain-hemisphere-segmentation-tool.git
-   cd Brain-Hemisphere-Segmentation-Tool
+   cd brain-hemisphere-segmentation-tool
    ```
 
 2. Create the conda environment using the environment.yml file:
