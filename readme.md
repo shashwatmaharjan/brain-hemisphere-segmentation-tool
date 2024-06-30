@@ -11,7 +11,6 @@ This Python script provides a graphical user interface (GUI) to segment the left
 
 - [Installation](#installation)
 - [Usage](#usage)
-- [Contributing](#contributing)
 - [License](#license)
 
 ## Installation
