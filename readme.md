@@ -29,7 +29,9 @@ conda activate brain_hemisphere_segmentation_tool_env
 ## Usage
 
 1. Run the script
-python scripts/main.py
+```bash
+python3 scripts/main.py
+   ```
 
 ## License
 
