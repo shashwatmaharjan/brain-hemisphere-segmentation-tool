@@ -3,6 +3,6 @@ channels:
   - defaults
 dependencies:
   - python=3.11.9
-  - platform=1.0.8
-  - PIL=10.3.0
-  - tkinter=8.6
+  - pip:
+    - pillow==10.3.0
+    - tk==8.6.11
