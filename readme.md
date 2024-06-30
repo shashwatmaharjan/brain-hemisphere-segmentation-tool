@@ -33,6 +33,8 @@ conda activate brain_hemisphere_segmentation_tool_env
 python3 scripts/main.py
    ```
 
+2. Use the GUI to segment the brain hemispheres and correct any artifacts.
+
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
