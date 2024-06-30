@@ -21,10 +21,14 @@ This Python script provides a graphical user interface (GUI) to segment the left
    ```
 
 2. Create the conda environment using the environment.yml file:
+```bash
 conda env create -f environment.yml
+   ```
 
 3. Activate the environment:
+```bash
 conda activate brain_hemisphere_segmentation_tool_env
+   ```
 
 ## Usage
 
