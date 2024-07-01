@@ -180,7 +180,7 @@ def clear_all_annotations(canvas):
 
 
 # Function to go to previous image
-def previous_image(canvas, image_files_in_folder, selected_folder, annotated_data_directory, sample_number):
+def previous_image(canvas, image_files_in_folder, selected_folder):
 
     global current_image_index
 
@@ -199,7 +199,7 @@ def previous_image(canvas, image_files_in_folder, selected_folder, annotated_dat
 
 
 # Function to go to next image
-def next_image(canvas, image_files_in_folder, selected_folder, annotated_data_directory, sample_number):
+def next_image(canvas, image_files_in_folder, selected_folder):
 
     global current_image_index
 
