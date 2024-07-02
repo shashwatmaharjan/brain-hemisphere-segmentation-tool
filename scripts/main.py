@@ -343,7 +343,7 @@ def main():
     left_frame.pack(side=tk.LEFT)
 
     # Create Previous button
-    previous_button = tk.Button(left_frame, text='Previous', command=lambda: previous_image(canvas, image_files_in_folder, selected_folder, annotated_data_directory, sample_number))
+    previous_button = tk.Button(left_frame, text='Previous', command=lambda: previous_image(canvas, image_files_in_folder, selected_folder))
     previous_button.pack(side=tk.LEFT, padx=5, pady=5)
 
     # Create Save button
@@ -351,7 +351,7 @@ def main():
     save_button.pack(side=tk.LEFT, padx=5, pady=5)
 
     # Create Next button
-    next_button = tk.Button(left_frame, text='Next', command=lambda: next_image(canvas, image_files_in_folder, selected_folder, annotated_data_directory, sample_number))
+    next_button = tk.Button(left_frame, text='Next', command=lambda: next_image(canvas, image_files_in_folder, selected_folder))
     next_button.pack(side=tk.LEFT, padx=5, pady=5)
 
     # Create a frame to hold the mode button
