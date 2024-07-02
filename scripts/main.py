@@ -2,9 +2,10 @@
 import os
 import platform
 import tkinter as tk
+import io
 
 from tkinter import filedialog
-from PIL import Image, ImageTk, ImageGrab
+from PIL import Image, ImageTk, ImageDraw
 
 # Define necessary functions
 # Function to clear screen
@@ -68,6 +69,9 @@ def load_image(canvas, image_path):
     # This prevents the image from being garbage collected meaning if might not be displayed 
     # and ensures that there is reference to the image as long as the canvas is displayed
     canvas.create_image(0, 0, anchor=tk.NW, image=photo)
+    
+    # Return the actual image object for further processing
+    return image
 
 
 # Function to define when a button is pressed
@@ -106,6 +110,9 @@ def draw_straight_line(end_x, end_y, canvas):
         line_id = canvas.create_line(start_x, start_y, end_x, end_y, fill='white', 
                                      width=straight_line_marker_width)
         lines.append(line_id)
+        
+        # Append the drawing action to the list
+        drawing_actions.append(('line', (start_x, start_y, end_x, end_y)))
 
         # Update the start position
         start_x = None
@@ -217,22 +224,41 @@ def next_image(canvas, image_files_in_folder, selected_folder):
         root.title(f'Annotate {image_files_in_folder[current_image_index]}')
 
 
+# Function to redraw drawings on image
+def redraw_drawing_on_image(path_to_image, canvas):
+
+    # Load the base image
+    base_image = load_image(canvas, path_to_image)
+
+    # Draw the lines on the image
+    draw = ImageDraw.Draw(base_image)
+
+    # Redraw all actions
+    for action in drawing_actions:
+
+        if action[0] == 'line':
+
+            # Correctly access the tuple for drawing a line
+            start_x, start_y, end_x, end_y = action[1]
+            draw.line((start_x, start_y, end_x, end_y), fill='white', width=straight_line_marker_width)
+    
+    return base_image
+
+
 # Function to save the current annotated image
-def save_annotated_image(canvas, output_path):
+def save_annotated_image(canvas, image_path, output_path):
 
-    # Tried the .ps format but it required additional ghostscript installation
-    # Get the canvas coordinates
-    x0 = root.winfo_rootx()
-    y0 = root.winfo_rooty()
+    # Redraw all drawings on the image
+    annotated_image = redraw_drawing_on_image(image_path, canvas)
 
-    width = canvas.winfo_width()
-    height = canvas.winfo_height()
+    # Check if output path has an extension, if not, add a default
+    if not output_path.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif', '.tiff')):
 
-    # Grab the canvas content as an image
-    image = ImageGrab.grab((x0, y0, x0 + width, y0 + height))
+        # Default to tiff if no extension provided
+        output_path = output_path + '.tiff'
 
-    # Save the image
-    image.save(f'{output_path}.tif', 'TIFF')
+    # Save the annotated image
+    annotated_image.save(output_path)
 
 
 # Main function
@@ -245,9 +271,13 @@ def main():
     global current_image_index
     global draw_mode_button
     global root
+    global drawing_actions
 
     # Initialize a default drawing mode
     drawing_mode = 'straight'
+
+    # Initialize a list to keep track of all drawing actions
+    drawing_actions = []
 
     # Define the marker width
     straight_line_marker_width = 4
@@ -347,7 +377,9 @@ def main():
     previous_button.pack(side=tk.LEFT, padx=5, pady=5)
 
     # Create Save button
-    save_button = tk.Button(left_frame, text='Save', command=lambda: save_annotated_image(canvas, os.path.join(annotated_data_directory, sample_number, image_files_in_folder[current_image_index].split('.')[0])))
+    save_button = tk.Button(left_frame, text='Save', command=lambda: save_annotated_image(canvas, 
+                                                                                          path_to_image,
+                                                                                          os.path.join(annotated_data_directory, sample_number, image_files_in_folder[current_image_index].split('.')[0])))
     save_button.pack(side=tk.LEFT, padx=5, pady=5)
 
     # Create Next button
